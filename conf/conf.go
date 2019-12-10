@@ -28,3 +28,7 @@ func Load() {
 		panic(err)
 	}
 }
+
+func GetDataBaseConfig() DatabaseConfig {
+	return conf.Database
+}

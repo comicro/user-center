@@ -4,6 +4,7 @@ import (
 	"github.com/micro/go-micro/util/log"
 	"github.com/micro/go-micro"
 	"user-center/conf"
+	"user-center/db"
 	"user-center/handler"
 	"user-center/subscriber"
 
@@ -13,6 +14,9 @@ import (
 func main() {
 	// load config
 	conf.Load()
+	// load db
+	db.Load()
+
 	// New Service
 	service := micro.NewService(
 		micro.Name("comicro.srv.user"),
