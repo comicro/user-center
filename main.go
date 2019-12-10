@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/micro/go-micro/util/log"
 	"github.com/micro/go-micro"
+	"user-center/conf"
 	"user-center/handler"
 	"user-center/subscriber"
 
@@ -10,6 +11,8 @@ import (
 )
 
 func main() {
+	// load config
+	conf.Load()
 	// New Service
 	service := micro.NewService(
 		micro.Name("comicro.srv.user"),
