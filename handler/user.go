@@ -6,6 +6,8 @@ import (
 	"user-center/repository"
 	"user-center/service"
 
+	"github.com/go-ozzo/ozzo-validation/v3"
+	"github.com/go-ozzo/ozzo-validation/v3/is"
 	"github.com/micro/go-micro/util/log"
 	"golang.org/x/crypto/bcrypt"
 
@@ -34,15 +36,15 @@ func authError(resp *user.AuthResponse, code int32, message string) error {
 
 func (e *User) Register(ctx context.Context, req *user.User, resp *user.AuthResponse) error {
 
-	if len(req.Name) < 6 {
-		return authError(resp, 401, "用户名不能少于6位")
+	err := validation.ValidateStruct(req,
+		validation.Field(&req.Name, validation.Required.Error("不能为空"), validation.Length(6, 50).Error("不能少于6位")),
+		validation.Field(&req.Email, validation.Required.Error("不能为空"), is.Email.Error("必须为合法的邮箱")),
+		validation.Field(&req.Password, validation.Required.Error("不能为空"), validation.Length(6, 100).Error("不能少于6位")),
+	)
+	if err != nil {
+		return authError(resp, 401, err.Error())
 	}
-	if len(req.Email) < 6 {
-		return authError(resp, 401, "邮箱不能少于6位")
-	}
-	if len(req.Password) < 6 {
-		return authError(resp, 401, "密码不能少于6位")
-	}
+
 	hashedPass, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
