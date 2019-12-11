@@ -6,8 +6,8 @@ import (
 	"user-center/repository"
 	"user-center/service"
 
-	"golang.org/x/crypto/bcrypt"
 	"github.com/micro/go-micro/util/log"
+	"golang.org/x/crypto/bcrypt"
 
 	user "user-center/proto/user"
 )
@@ -34,13 +34,16 @@ func authError(resp *user.AuthResponse, code int32, message string) error {
 
 func (e *User) Register(ctx context.Context, req *user.User, resp *user.AuthResponse) error {
 
+	if len(req.Name) < 6 {
+		return authError(resp, 401, "用户名不能少于6位")
+	}
 	if len(req.Email) < 6 {
-		return authError(resp,401,"用邮箱不能少于6位")
+		return authError(resp, 401, "邮箱不能少于6位")
 	}
 	if len(req.Password) < 6 {
-		return authError(resp,401,"密码不能少于6位")
+		return authError(resp, 401, "密码不能少于6位")
 	}
-	hashedPass,err := bcrypt.GenerateFromPassword([]byte(req.Password),bcrypt.DefaultCost)
+	hashedPass, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
 	}
