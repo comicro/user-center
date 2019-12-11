@@ -13,6 +13,10 @@ type DB struct {
 	orm *gorm.DB
 }
 
+func Orm() *gorm.DB {
+	return db.orm
+}
+
 // load database
 func Load() {
 	orm, err := newORM()

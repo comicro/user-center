@@ -1,9 +1,11 @@
 
 title = "TOML Example"
+[app]
+token_key="secret_token_key"
 
 [database]
 host="127.0.0.1"
 port=5432
-database="user_center"
+database="postgres"
 username="postgres"
 password="postgres"

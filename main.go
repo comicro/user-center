@@ -16,6 +16,9 @@ func main() {
 	conf.Load()
 	// load db
 	db.Load()
+	defer db.Orm().Close()
+
+	db.Orm().AutoMigrate(&user.User{})
 
 	// New Service
 	service := micro.NewService(
@@ -27,7 +30,7 @@ func main() {
 	service.Init()
 
 	// Register Handler
-	user.RegisterUserHandler(service.Server(), new(handler.User))
+	user.RegisterUserServiceHandler(service.Server(), handler.UserHandle())
 
 	// Register Struct as Subscriber
 	micro.RegisterSubscriber("comicro.srv.user", service.Server(), new(subscriber.User))

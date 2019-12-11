@@ -9,6 +9,7 @@ import (
 
 type Config struct {
 	Database DatabaseConfig `json:"database" toml:"database"`
+	App AppConfig `json:"app"`
 }
 
 var c config.Config
@@ -31,4 +32,12 @@ func Load() {
 
 func GetDataBaseConfig() DatabaseConfig {
 	return conf.Database
+}
+
+func GetAppConfig() AppConfig  {
+	return conf.App
+}
+
+func TokenKey() []byte {
+	return []byte(conf.App.TokenKey)
 }
